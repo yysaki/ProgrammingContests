@@ -53,14 +53,13 @@ public:
       int N;
       vector<int> A, B; // a: ‚P‚Â¯, b: 2‚Â¯ ‚É‚©‚©‚éš
       inputTest(&N, &A, &B);
-      //      vector<bool> CompA, CompB;
 
       int now = 0, step = 0;
-      vector<int> done, prev;
-      for(int i=0; i<N;i++){
-        done.push_back(0);
-        prev.push_back(INT16_MIN);
-      }
+      vector<int> done(N, 0);
+      // mine
+      //      vector<int> prev(N, INT16_MIN);
+      //      vector<bool> CompA, CompB;
+
       while(now<2*N){
         step++;
         bool isFound = false;
@@ -153,9 +152,8 @@ private:
 std::ostream& operator<<(std::ostream& s, const Solver& sol){ return sol.dump(s); }
 
 int main() {
-  // TODO
-  //      Solver s("data/sample.in", "data/sample.out");
-  Solver s("data/B-large-practice.in", "data/B-large-practice.out");
+  Solver s("data/sample.in", "data/sample.out");
+  //  Solver s("data/B-large-practice.in", "data/B-large-practice.out");
   s.solve();
   s.output();
 
