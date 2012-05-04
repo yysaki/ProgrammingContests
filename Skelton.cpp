@@ -2,13 +2,13 @@
 #include <iomanip>
 #include <fstream>
 #include <sstream>
-#include <vector>
 #include <algorithm>
+#include <limits>
+#include <numeric>
+#include <vector>
+#include <map>
+#include <set>
 #include <cassert>
-
-#include <boost/tuple/tuple.hpp>
-#include <boost/tuple/tuple_io.hpp>
-#include <boost/tokenizer.hpp>
 
 using namespace std;
 
@@ -16,27 +16,21 @@ template <class _Ans>
 class Solver {
 public:
   Solver(const char* in, const char* out) : ifs_(in), ofs_(out), now_(0) {
-    if(!ifs_.is_open()){
-      cerr << "input file is not found" << endl;
-      assert(0);
-    }
+    assert(ifs_.is_open());
     ifs_ >> T_;
   }
   ~Solver(){ ifs_.close(); ofs_.close(); }
   bool hasNext(){ return (now_++)<T_; }
 
   //TODO change initial values
-  void readTest(int* N){
-    if(!ifs_.is_open()){
-      cerr << "input file is not found" << endl;
-      assert(0);
-    }
+  void readTest(int* param){
+    assert(ifs_.is_open());
     // TODO set init
-    //    ifs_ >> *N;
+        ifs_ >> *param;
   }
 
   void writeAns(_Ans ans){
-    assert(now_<=0 || T_<=now_);
+    assert(0<now_ || now_<=T_);
     ofs_ << "Case #" << now_ << ": ";
     ofs_ << ans << endl;
   }
@@ -47,10 +41,10 @@ private:
 
 public:
   // TODO change initial values
-  _Ans solve(int N){
-    _Ans ans;
-    // TODO main logic
+  _Ans solve(int param){
+    /* TODO main logic */
 
+    _Ans ans;
     return ans;
   }
 };
@@ -62,8 +56,8 @@ int main() {
     // TODO chenge initial values
     int N;
     // TODO change operands
-    s.inputTest(&N);
-    s.outputAns(s.solve(N));
+    s.readTest(&N);
+    s.writeAns(s.solve(N));
   }
 
   return 0;
