@@ -12,61 +12,59 @@
 
 using namespace std;
 
+template <class _Ans>
 class Solver {
 public:
-  Solver(const char* in, const char* out) : ifs(in), ifName(in), ofName(out) {
-    if(!ifs.is_open()){
-      std::cout << ifName << " is not found" << std::endl;
+  Solver(const char* in, const char* out) : ifs_(in), ofs_(out), now_(0) {
+    if(!ifs_.is_open()){
+      cerr << "input file is not found" << endl;
       assert(0);
     }
-    ifs >> T;
+    ifs_ >> T_;
   }
-  ~Solver(){ ifs.close(); }
+  ~Solver(){ ifs_.close(); ofs_.close(); }
+  bool hasNext(){ return (now_++)<T_; }
 
-  std::ostream& dump(std::ostream& s) const{
-    stringstream ss;
-    for (int i=0;i<T;i++) {
-      // TODO
-      //      ss << "Case #" << i+1 << ": " << answers[i] << endl;
+  //TODO change initial values
+  void readTest(int* N){
+    if(!ifs_.is_open()){
+      cerr << "input file is not found" << endl;
+      assert(0);
     }
-    s << ss.str();
-    return s;
-  }
-  void output() const {
-    std::ofstream ofs(ofName);
-    dump(ofs);
+    // TODO set init
+    //    ifs_ >> *N;
   }
 
-  void solve(){
-    for(int test=0;test<T;test++){
-      // test–ˆ‚ÉinputTest‚Å‰Šú‰», ŒvŽZ, answers‚É’~Ï
-      // TODO
-    }
+  void writeAns(_Ans ans){
+    assert(now_<=0 || T_<=now_);
+    ofs_ << "Case #" << now_ << ": ";
+    ofs_ << ans << endl;
   }
 
 private:
-  void inputTest(int* N, int* S, int* p, std::vector<int>* t){
-    if(!ifs.is_open()){
-      cout << ifName << " is not found" << endl;
-      assert(0);
-    }
-    // TODO
-    //    ifs >> *N >> *S >> *p;
-  }
+  ifstream ifs_; ofstream ofs_;
+  int T_, now_;
 
-  std::ifstream ifs;
-  const char* ifName; const char* ofName;
-  int T;
-  std::vector<int> answers;
+public:
+  // TODO change initial values
+  _Ans solve(int N){
+    _Ans ans;
+    // TODO main logic
+
+    return ans;
+  }
 };
 
-std::ostream& operator<<(std::ostream& s, const Solver& sol){ return sol.dump(s); }
-
 int main() {
-  // TODO
-  Solver s("data/B-large.in", "data/B-large.out");
-  s.solve();
-  s.output();
+  // TODO change _Ans-type and filename
+  Solver<int> s("sample.in", "sample.out");
+  while(s.hasNext()){
+    // TODO chenge initial values
+    int N;
+    // TODO change operands
+    s.inputTest(&N);
+    s.outputAns(s.solve(N));
+  }
 
   return 0;
 }
