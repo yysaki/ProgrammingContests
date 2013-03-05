@@ -1,0 +1,81 @@
+/*
+ * give up POJ 3669 Meteor Shower
+ * 蟻本 幅優先探索例題
+ * point{x, y, time} でTLE => pair<int, int> でもTLE
+ * 参考: http://eagletmt.github.com/contests/blog/poj-3669/
+ * give up
+ * 番兵追加でメテオ処理を簡単化したらruntime error
+ */
+
+#include <iostream>
+#include <vector>
+#include <queue>
+using namespace std;
+
+const int MAX = 302, INF = 1<<20;
+
+int field[MAX][MAX];
+
+int bfs(){
+  if(field[1][1]==0) return -1;
+
+  int dist[MAX][MAX];
+  for(int i = 0; i < MAX; i++){
+    fill_n(dist[i], MAX, INF);
+  }
+
+  queue<pair<int, int> > que;
+  que.push(make_pair(1,1));
+  dist[1][1] = 0;
+
+  while(!que.empty()){
+    int x = que.front().first;
+    int y = que.front().second;
+    que.pop();
+    if(field[x][y] == INF) return dist[x][y];
+
+    for(int i = 0; i < 4; i++){
+      static const int dx[4] = {1, -1, 0, 0};
+      static const int dy[4] = {0, 0, 1, -1};
+      const int xd = x + dx[i];
+      const int yd = y + dy[i];
+      const int time = dist[x][y] + 1;
+
+      if(1<=xd && xd<MAX-1 && 1<=yd && yd<MAX-1){
+        if(time < field[xd][yd] && time < dist[xd][yd]){
+          dist[xd][yd] = time;
+          que.push(make_pair(xd, yd));
+        }
+      }
+    }
+  }
+
+  return -1;
+}
+
+int main(){
+  for(int i = 0; i < MAX; i++){
+    fill_n(field[i], MAX, INF);
+  }
+
+  int M;
+  cin >> M;
+  static const int dx[5] = {1, -1, 0, 0, 0};
+  static const int dy[5] = {0, 0, 1, -1, 0};
+
+  for(int i = 0; i < M; i++){
+    int Xd, Yd, Td;
+    cin >> Xd; cin >> Yd; cin >> Td;
+    Xd++; Yd++;
+    for(int j = 0;j < 5; j++){
+      const int xd = Xd+dx[j];
+      const int yd = Yd+dy[j];
+      if(field[xd][yd] > Td){
+        field[xd][yd] = Td;
+      }
+    }
+  }
+
+  cout << bfs() << endl;
+  return 0;
+}

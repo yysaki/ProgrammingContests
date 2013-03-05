@@ -1,0 +1,13 @@
+* 22:00~
+PikachuEasy(easy)
+* 3 syllables: "pi", "ka", "chu"
+* syllablesを結合したstringのみ
+
+CasketOfStarEasy(mid, 未回答)
+* sic casket of star(東方Universe) 
+* int weight[n] (starの重み: 0 -> n-1)
+** w[x](x!=0, n-1)を消費 -> generate w[x-1]*w[x+1]
+** w[n-1]の配列に詰め直す
+* ret:最良の生産エネルギー量を求める
+** 未解決
+*** 他人のコードでは再帰で求めていた! 
