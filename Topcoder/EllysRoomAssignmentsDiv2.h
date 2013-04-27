@@ -1,6 +1,7 @@
 /**
  * SRM 577 div2 Mid
- * answered
+ * answer fixed
+ * 抜けていた条件: Ellyが1位の時1.0を返す
  */
 
 #include <algorithm>
@@ -22,9 +23,9 @@ class EllysRoomAssignmentsDiv2 {
 public: 
   double getProbability(vector<string> ratings) {
     stringstream ss;
-    vector<string>::iterator s_it;
-    for(s_it = ratings.begin(); s_it != ratings.end(); s_it++){
-      ss << *s_it;
+    vector<string>::iterator it;
+    for(it = ratings.begin(); it != ratings.end(); it++){
+      ss << *it;
     }
     vector<int> vec;
     while(!ss.eof()){
@@ -34,19 +35,22 @@ public:
     }
 
     const int N = vec.size();
-    int R = (N%20==0) ? N/20 : N/20 + 1;
+    const int R = (N%20==0) ? N/20 : N/20 + 1;
 
-    int ellyRate = vec[0];
+    const int elly_rate = vec[0];
     sort(vec.rbegin(), vec.rend());
 
-    for(int i = 0; i < N; i++){
-      if(ellyRate == vec[i]){
-        if(i+1<= R) return 0.0;
-        break;
+    int elly_rank = 0:
+      for(int i = 0; i < N; i++){
+        if(elly_rate == vec[i]){
+          elly_rank = i+1;
+          break;
+        }
       }
-    }
 
-    return 1.0 / (double)R;
+    return (elly_rank == 1) ? 1.0 
+      : (elly_rank <= R)    ? 0.0
+      :                       1.0 / (double)R;
   }
 
 };
