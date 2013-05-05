@@ -39,7 +39,7 @@ using namespace std;
 class TeamContestEasy
 {
 public:
-	int worstRank(vector <int> strength) {
+  int worstRank(vector <int> strength) {
     vector<int> s(strength);
     const int border = s[0] + s[1] + s[2] - min(s[0], min(s[1], s[2]));
 
