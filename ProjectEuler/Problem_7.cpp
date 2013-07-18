@@ -1,9 +1,43 @@
 #include <bitset>
 #include <iostream>
 #include <vector>
+#include <cmath>
 using namespace std;
 
-int main(){
+bool isPrime(long long n){
+  if(n == 1) return false; 
+  if(n < 4) return true;
+  if(n % 2 == 0) return false;
+  if(n < 9) return true;
+  if(n % 3 == 0) return false;
+
+  long long r = (int)std::sqrt(n);
+  for (long long f = 5; f <=r; f+=6) {
+    if(n % f == 0) return false;
+    if(n % (f+2) == 0) return false;
+  }
+
+  return true;
+}
+
+long long ans10001stPrime(){
+  long long candidate = 2;
+  int count = 1;
+  for (long long j = candidate + 1;; j += 2) {
+    if(isPrime(j)){
+      candidate = j;
+      count++;
+      if(count == 10001){
+        break;
+      }
+    }
+  }
+
+  return candidate;
+}
+
+
+int my10001stPrime(){
   const int num = 500000;
   std::bitset<num> flags;
   flags.reset();
@@ -25,7 +59,12 @@ int main(){
     }
   }
 
-  cout << primes[10001-1] << endl;
+  return primes[10001-1];
+}
+
+int main(){
+  cout << ans10001stPrime() << endl;
+  //  cout << my10001stPrime() << endl;
 
   return 0;
 }
