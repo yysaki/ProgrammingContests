@@ -7,10 +7,10 @@
 #define J(i) (((i>>8)-1) / ((i&255)+1))
 #define K(i) (((i>>8)-1) % ((i&255)+1))
 
-int sort(int* a, long i){
+int sort(int* a, int i){
   for(i = (i*i*256) + (i-1); i >= 256; i = i - 256){
     ORDER(a[J(i)], a[K(i)]);
-    printf("J=%ld, K=%ld, masked=%ld\n", J(i), K(i), i & 255);
+    printf("J=%d, K=%d, masked=%d\n", J(i), K(i), i & 255);
   }
 }
 
