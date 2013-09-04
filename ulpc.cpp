@@ -13,8 +13,9 @@
 #include <cstdlib>
 using namespace std;
 
-class Time{
+class Time {
 public:
+  Time(){}
   Time(string arg){
     std::replace(arg.begin(), arg.end(), ':', ' ');
     istringstream iss(arg);
@@ -39,12 +40,22 @@ private:
   int hh, mm, ss;
 };
 
-class Column{
+class Column {
 public:
   Column(int ti, int pi, int ci, string si) : t(ti), p(pi), c(ci), s(si) {}
   int t, p, c;
   Time s;
 };
+
+class Status{
+public:
+  int team;
+  int problems;
+  Time last_commited;
+  Status(){}
+  Status(int t, int p, Time l) : team(t), problems(p), last_commited(l) {}
+};
+
 
 class CompColumnByTeamProblem {
 public:
@@ -65,15 +76,49 @@ public:
   }
 };
 
+class CompStatusByRank {
+public:
+  bool operator()(const Status &lhs,const Status &rhs) const {
+    if(lhs.problems < rhs.problems) return false;
+    if(lhs.problems > rhs.problems) return true;
+    if(lhs.last_commited < rhs.last_commited) return false;
+    return true;
+  }
+};
+
 typedef vector<Column> container_t;
 
 int T, P, G, N;
 container_t container;
 
 std::string solve(){
-  
+  vector<Status> statuses;
+  for(int i = 0; i < T; ++i){
+    statuses.push_back(Status(i, 0, Time()));
+  }
 
-  return string();
+  int goal_score = 9;
+  for(int i = 0; i < (int)container.size(); ++i){
+    if(container[i].p == G){
+      statuses[container[i].t].problems += goal_score;
+      goal_score = std::max(1, goal_score - 1);
+    }else{
+      statuses[container[i].t].problems++;
+    }
+    statuses[container[i].t].last_commited = Time(container[i].s);
+  }
+  
+  sort(statuses.begin(), statuses.end(), CompStatusByRank());
+
+  ostringstream oss;
+  for(int i = 0; i < (int)statuses.size(); ++i){
+    oss << statuses[i].team;
+    if(i < (int)statuses.size() - 1){
+      oss << " ";
+    }
+  }
+
+  return oss.str();
 }
 
 void arrange(){
