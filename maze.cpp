@@ -39,7 +39,14 @@ public:
 
 typedef map< M, bool > maze_t;
 
-int solve(maze_t maze){
+maze_t maze;
+
+void maze_insert(P from, P to){
+  maze[M(from, to)] = true;
+  maze[M(to, from)] = true;
+}
+
+int solve(){
 //  for(maze_t::const_iterator it = maze.begin(); it != maze.end(); ++it){
 //    cout << "(" << it->first.from.x << ", " << it->first.from.y << 
 //      ") -> (" << it->first.to.x << ", " << it->first.to.y <<
@@ -54,18 +61,14 @@ int main(){
   int count = 0;
   cin >> W >> H;
   while(W > 0 && H > 0){
-    maze_t maze;
+    maze = maze_t();
     for(int i = 0; i < W+2; ++i){
-       maze[M(P(i,0), P(i,1))] = true;
-       maze[M(P(i,1), P(i,0))] = true;
-       maze[M(P(i,H), P(i,H+1))] = true;
-       maze[M(P(i,H+1), P(i,H))] = true;
+       maze_insert(P(i,0), P(i,1));
+       maze_insert(P(i,H), P(i,H+1));
     }
     for(int j = 0; j < H+2; ++j){
-       maze[M(P(0,j), P(1,j))] = true;
-       maze[M(P(1,j), P(0,j))] = true;
-       maze[M(P(W,j), P(W+1,j))] = true;
-       maze[M(P(W+1,j), P(W,j))] = true;
+       maze_insert(P(0,j), P(1,j));
+       maze_insert(P(W,j), P(W+1,j));
     }
 
     for(int j = 1; j < H+1; ++j){
@@ -73,8 +76,7 @@ int main(){
         int flag;
         cin >> flag;
         if(flag){
-          maze[M(P(i,j), P(i+1,j))] = true;
-          maze[M(P(i+1,j), P(i,j))] = true;
+          maze_insert(P(i,j), P(i+1,j));
         }
       }
       if(j != H){
@@ -82,16 +84,13 @@ int main(){
           int flag;
           cin >> flag;
           if(flag){
-            maze[M(P(i,j), P(i,j+1))] = true;
-            maze[M(P(i,j+1), P(i,j))] = true;
+            maze_insert(P(i,j), P(i,j+1));
           }
         }
       }
     }
 
-    cout << "--------" << endl;
-    cout << solve(maze) << endl;
-
+    cout << solve() << endl;
     cin >> W >> H;
   }
 
