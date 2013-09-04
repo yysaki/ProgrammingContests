@@ -16,9 +16,9 @@ using namespace std;
 class Time {
 public:
   Time(){}
-  Time(string arg){
-    std::replace(arg.begin(), arg.end(), ':', ' ');
-    istringstream iss(arg);
+  Time(string row_str){
+    std::replace(row_str.begin(), row_str.end(), ':', ' ');
+    istringstream iss(row_str);
     iss >> hh >> mm >> ss;
   }
 
@@ -36,13 +36,14 @@ public:
     oss << hh << ":" << mm << ":" << ss;
     return oss.str();
   }
+
 private:
   int hh, mm, ss;
 };
 
 class Column {
 public:
-  Column(int ti, int pi, int ci, string si) : t(ti), p(pi), c(ci), s(si) {}
+  Column(int t, int p, int c, string s) : t(t), p(p), c(c), s(s) {}
   int t, p, c;
   Time s;
 };
@@ -88,7 +89,7 @@ public:
 
 typedef vector<Column> container_t;
 
-int T, P, G, N;
+int T, G;
 container_t container;
 
 std::string solve(){
@@ -101,7 +102,7 @@ std::string solve(){
   for(int i = 0; i < (int)container.size(); ++i){
     if(container[i].p == G){
       statuses[container[i].t].problems += goal_score;
-      goal_score = std::max(1, goal_score - 1);
+      goal_score = std::max(1, goal_score - 2);
     }else{
       statuses[container[i].t].problems++;
     }
@@ -121,41 +122,37 @@ std::string solve(){
   return oss.str();
 }
 
-void arrange(){
-  container_t tmp = container;
+void arrange_container(){
+  const container_t container_for_validate = container;
   container = container_t();
-  // vaildate
-  for(int i = 0; i < (int)tmp.size(); ++i){
-    if(tmp[i].c == 1){
-      container.push_back(tmp[i]);
+  for(int i = 0; i < (int)container_for_validate.size(); ++i){
+    if(container_for_validate[i].c == 1){
+      container.push_back(container_for_validate[i]);
     }
   }
 
-  tmp = container;
+  sort(container.begin(), container.end(), CompColumnByTeamProblem());
+  const container_t container_for_uniq = container;
   container = container_t();
-  sort(tmp.begin(), tmp.end(), CompColumnByTeamProblem());
-  // uniq
-  for(int i = 0; i < (int)tmp.size() - 1; ++i){
+  for(int i = 0; i < (int)container_for_uniq.size() - 1; ++i){
     int count = 0;
-    for(int j = i + 1; j < (int)tmp.size() - 1; ++j){
-      if(tmp[i].t == tmp[j].t && tmp[i].p == tmp[j].p){
+    for(int j = i + 1; j < (int)container_for_uniq.size() - 1; ++j){
+      if(container_for_uniq[i].t == container_for_uniq[j].t &&
+          container_for_uniq[i].p == container_for_uniq[j].p){
         count++;
       }else{
         break;
       }
     }
-    container.push_back(tmp[i]);
+    container.push_back(container_for_uniq[i]);
     i += count;
   }
 
   sort(container.begin(), container.end(), CompColumnByTime());
-
-//  for(int i = 0; i < (int)container.size(); ++i){
-//    cout << container[i].t << ", " << container[i].p << ", " << container[i].c << ", " << container[i].s.to_s() << endl;
-//  }
 }
 
 int main(){
+  int P, N;
   cin >> T >> P >> G >> N;
   while(T || P || G || N){
     container = container_t();
@@ -168,7 +165,7 @@ int main(){
       container.push_back(Column(ti, pi, ci, si));
     }
 
-    arrange();
+    arrange_container();
     cout << solve() << endl;
 
     cin >> T >> P >> G >> N;
