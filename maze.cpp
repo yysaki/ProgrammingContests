@@ -9,6 +9,7 @@
 #include <stack>
 #include <queue>
 #include <set>
+#include <utility>
 #include <boost/tuple/tuple.hpp>
 #include <cstdlib>
 using namespace std;
@@ -40,6 +41,9 @@ public:
 typedef map< M, bool > maze_t;
 
 maze_t maze;
+int W, H;
+const int dx[4] = {1,-1,0,0};
+const int dy[4] = {0,0,1,-1};
 
 void maze_insert(P from, P to){
   maze[M(from, to)] = true;
@@ -53,11 +57,49 @@ int solve(){
 //      ") = " << it->second << endl;
 //  }
 
+  bool flags[W+2][H+2];
+  for(int i = 0; i < W+2; ++i){
+    for(int j = 0; j < H+2; ++j){
+      flags[i][j] = false;
+    }
+  }
+  
+  queue<pair<P,int> > que;
+  flags[1][1] = true;
+  que.push(make_pair(P(1,1), 1));
+
+  while(!que.empty()){
+    const P cur = que.front().first;
+    const int score = que.front().second;
+    que.pop();
+
+    if(cur.x == W && cur.y == H) return score;
+
+    // TODO
+    for(int dir = 0; dir < 4; ++dir){
+      const int next_x = cur.x + dx[dir];
+      const int next_y = cur.y + dy[dir];
+      if(!maze[M(P(cur.x, cur.y), P(next_x, next_y))]){
+        if(!flags[next_x][next_y]){
+          flags[next_x][next_y] = true;
+          que.push(make_pair(P(next_x, next_y), score + 1));
+          cout << "(" << cur.x << ", " << cur.y << ") -> (" << next_x << ", " << next_y << ")" << endl;
+        }
+      }
+    }
+  }
+
+  for(int i = 0; i < W+2; ++i){
+    for(int j = 0; j < H+2; ++j){
+      cout << flags[i][j];
+    }
+    cout << endl;
+  }
+
   return 0;
 }
 
 int main(){
-  int W, H;
   int count = 0;
   cin >> W >> H;
   while(W > 0 && H > 0){
@@ -89,6 +131,8 @@ int main(){
         }
       }
     }
+
+    cout << W << ", " << H << endl;
 
     cout << solve() << endl;
     cin >> W >> H;
