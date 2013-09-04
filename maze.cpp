@@ -26,7 +26,6 @@ class M {
 public:
   P from, to;
   M(P from, P to) : from(from), to(to) {}
-  // dummy
   
   bool operator<(const M &rhs)  const {
     return unique_num() < rhs.unique_num();
@@ -49,12 +48,6 @@ void maze_insert(P from, P to){
 }
 
 int solve(){
-//  for(maze_t::const_iterator it = maze.begin(); it != maze.end(); ++it){
-//    cout << "(" << setw(2) << it->first.from.x << ", " << setw(2) << it->first.from.y << 
-//      ") -> (" << setw(2) << it->first.to.x << ", " << setw(2) << it->first.to.y <<
-//      ") = " << it->second << endl;
-//  }
-
   bool flags[W+2][H+2];
   for(int i = 0; i < W+2; ++i){
     for(int j = 0; j < H+2; ++j){
@@ -73,29 +66,17 @@ int solve(){
 
     if(cur.x == W && cur.y == H){ return score; } 
 
-//    cout << "(" << cur.x << ", " << cur.y << ") phase" << endl; 
-
-    // TODO
     for(int dir = 0; dir < 4; ++dir){
       const int next_x = cur.x + dx[dir];
       const int next_y = cur.y + dy[dir];
-//      cout << "  -> (" << next_x << ", " << next_y << "): ";
       if(!maze[M(P(cur.x, cur.y), P(next_x, next_y))]){
         if(!flags[next_x][next_y]){
           flags[next_x][next_y] = true;
           que.push(make_pair(P(next_x, next_y), score + 1));
-//          cout << "OK" << endl;
-        }//else{ cout << "check !flags" << endl; }
-      }//else{ cout << "check maze:" << maze[M(P(cur.x, cur.y), P(next_x, next_y))] << endl; }
+        }
+      }
     }
   }
-
-//  for(int j = 0; j < H+2; ++j){
-//    for(int i = 0; i < W+2; ++i){
-//      cout << flags[i][j];
-//    }
-//    cout << endl;
-//  }
 
   return 0;
 }
@@ -131,8 +112,6 @@ int main(){
         }
       }
     }
-
-//    cout << W << ", " << H << endl;
 
     cout << solve() << endl;
     cin >> W >> H;
